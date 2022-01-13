@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "declaration": true,
+        "module": "ES2020",
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "strict": false,
+        "rootDir": ".",
+        "lib": ["esnext"],
+        "resolveJsonModule": true,
+        "esModuleInterop": true
+    },
+    "exclude": [
+        "node_modules",
+        "examples/ecmascript",
+        "examples/typescript",
+        "dist"
+    ]
+}

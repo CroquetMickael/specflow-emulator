@@ -1,0 +1,37 @@
+{
+  "name": "specflow-emulator",
+  "version": "1.0.0",
+  "description": "A specflow emulator for jest-cucumber, working on jest and vitest",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tslint --project ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CroquetMickael/specflow-emulator.git"
+  },
+  "keywords": [
+    "gherkin",
+    "specflow",
+    "jest",
+    "vitest"
+  ],
+  "author": "Mickael Croquet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CroquetMickael/specflow-emulator/issues"
+  },
+  "homepage": "https://github.com/CroquetMickael/specflow-emulator#readme",
+  "devDependencies": {
+    "jest-cucumber": "^3.0.1"
+  },
+  "dependencies": {
+    "callsites": "^3.0.0",
+    "glob": "^7.1.6",
+    "kleur": "^4.1.4",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.4"
+  }
+}
