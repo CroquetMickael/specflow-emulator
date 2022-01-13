@@ -1,0 +1,15 @@
+{
+  "name": "jest-cucumber-examples",
+  "version": "1.0.0",
+  "description": "Execute Gherkin scenarios in Vitest",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "test": "vitest",
+    "vitest": "vitest --verbose"
+  },
+  "devDependencies": {
+    "vite": "^2.7.10",
+    "vitest": "0.0.125"
+  },
+  "dependencies": {}
+}
