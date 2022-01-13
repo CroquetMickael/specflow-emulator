@@ -13,6 +13,10 @@ import { formatStepMatchingError } from "./errors";
 import { StepDefinition } from "./StepDefinition";
 import { loadFeature } from "jest-cucumber/dist/src/parsed-feature-loading";
 
+
+const stepNotExportedString = (filePath: string) =>
+`Le fichier ${filePath} n'exporte pas de variable stepDefinitions`;
+
 const stepPool: StepDefinition[] = [];
 let isLoaded = false;
 export const defineFeature = (
@@ -25,6 +29,7 @@ export const defineFeature = (
   const cheminAbsolu = isCheminRelatif
     ? `${dossierAppelant}/${cheminFichier}`
     : cheminFichier;
+
 
   const feature = loadFeature(cheminAbsolu, {
     loadRelativePath: false,
@@ -118,9 +123,34 @@ export const loadSteps = async (dossier = "./src/__features__") => {
     )) as unknown as { stepDefinitions: StepDefinition[] };
 
     if (!stepDefinitions) {
-      console.error(
-        `Le fichier ${cheminFichier} n'exporte pas de variable stepDefinitions`
-      );
+      console.error(stepNotExportedString(cheminFichier));
+      return;
+    }
+    stepDefinitions.forEach((stepDefinition) => {
+      stepDefinition.cheminFichier = cheminFichier;
+      stepPool.push(stepDefinition);
+    });
+  }
+  isLoaded = true;
+};
+
+export const loadStepsJest = (dossier = "./src/__features__") => {
+  if (isLoaded) {
+    return;
+  }
+
+  stepPool.length = 0;
+  const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx}`;
+  const fichiers = glob.sync(patternFichier);
+
+  for (let i = 0; i < fichiers.length; i++) {
+    const cheminFichier = fichiers[i];
+    const { stepDefinitions } = require(path.resolve(cheminFichier)) as {
+      stepDefinitions: StepDefinition[];
+    };
+
+    if (!stepDefinitions) {
+      console.error(stepNotExportedString(cheminFichier));
       return;
     }
     stepDefinitions.forEach((stepDefinition) => {
