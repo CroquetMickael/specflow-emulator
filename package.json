@@ -1,6 +1,6 @@
 {
   "name": "specflow-emulator",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A specflow emulator for jest-cucumber, working on jest and vitest",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
