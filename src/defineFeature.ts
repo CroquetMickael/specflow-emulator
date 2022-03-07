@@ -113,7 +113,7 @@ export const loadSteps = async (dossier = "./src/__features__") => {
   }
 
   stepPool.length = 0;
-  const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx}`;
+  const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx,ts,tsx}`;
   const fichiers = glob.sync(patternFichier);
 
   for (let i = 0; i < fichiers.length; i++) {
@@ -140,7 +140,7 @@ export const loadStepsJest = (dossier = "./src/__features__") => {
   }
 
   stepPool.length = 0;
-  const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx}`;
+  const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx,ts,tsx}`;
   const fichiers = glob.sync(patternFichier);
 
   for (let i = 0; i < fichiers.length; i++) {
