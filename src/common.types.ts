@@ -5,8 +5,8 @@ import {
 
 export interface IScope {
     feature: string;
-    scenario: string;
-    tag: string;
+    scenario?: string;
+    tag?: string;
 }
 
 export type StepMatcher = string | RegExp;
