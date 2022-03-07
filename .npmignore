@@ -120,6 +120,9 @@ out
 .yarn/install-state.gz
 .pnp.*
 
+### Docs ###
+docs
+
 ### Node Patch ###
 # Serverless Webpack directories
 .webpack/
