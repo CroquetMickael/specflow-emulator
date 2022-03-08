@@ -35,6 +35,9 @@ export default defineConfig({
     environment: "choose your environnement here",
     setupFiles: ["./setupTests.js"],
     watch: true,
+    deps: {
+      inline: ["specflow-emulator"],
+    },
   },
 });
 ```
@@ -75,7 +78,8 @@ loadStepsJest();
 
 Yes, nothing is related with `Vue.js` or `React.js`, you can do some test with them.
 
+Examples here : [React / Javascript Examples](https://github.com/CroquetMickael/specflow-emulator/tree/main/examples)
+
 ## Other test framework
 
 Currently, we are using `jest-cucumber` behind the door, that's mean we can't provide more test framework like `mocha` or anything else.
-
