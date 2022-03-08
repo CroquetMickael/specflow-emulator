@@ -12,6 +12,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ["./setupTests.js"],
     watch: true,
+    deps: {
+      inline: ['specflow-emulator'],
+    },
   },
   plugins: [react()],
 });

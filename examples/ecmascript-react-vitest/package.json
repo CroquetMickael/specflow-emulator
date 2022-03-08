@@ -15,6 +15,6 @@
     "@testing-library/react": "^12.1.2",
     "@vitejs/plugin-react": "^1.0.7",
     "vite": "^2.7.2",
-    "vitest": "0.0.131"
+    "vitest": "^0.6.0"
   }
 }

@@ -40,6 +40,9 @@
     "testMatch": [
       "**/__tests__/**/*.[jt]s?(x)",
       "**/?(*.)+(spec|test|steps).[jt]s?(x)"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(specflow-emulator)).*\\.js$"
     ]
   },
   "devDependencies": {
