@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Scenario Context
 
-`specflow-emulator` give you access to a scenario context, a new way to share data between step, by default in `cucumber` or `jest-cucumber`, you would create a variable at the start of the test file in order to provide it anywhere else in the file.
+`specflow-emulator` give you access to a scenario context, a new way to share data between steps. By default in `cucumber` or `jest-cucumber` you would create a variable at the start of the test file in order to provide it anywhere else in the test file.
 
 ```javascript
 const { defineFeature, loadFeature } = require('jest-cucumber');
@@ -30,7 +30,7 @@ test("My scenario", ({
   }
 ```
 
-With `specflow-emulator`, you just have to use in your step the scenario context, it will automaticly share data between your steps, let's take the previous example and convert it to the new way.
+With `specflow-emulator`, you just have to use in your step the `scenarioContext` object. It will automaticly share data between your steps. Let's take the previous example and convert it to use `specflow-emulator` and `scenarioContext`.
 
 ```javascript
 import { defineSteps } from "specflow-emulator"
@@ -40,12 +40,13 @@ export const stepDefinitions = defineSteps(
   ({ Given, Then, When }) => {
 
       Given("do something", (scenarioContext) => (data) => {
-          // Here you can create variable inside the scenario context,
-          // it's an object, do what you want with it.
+          // Here you can create variable inside the scenario context
+          // It's an object, do what you want with it
           scenarioContext.sharedData = data
       })
 
       Then("Use shared data", (scenarioContext) => () => {
+        // You will be able to access the object values in the other steps
           expect(scenarioContext.sharedData).toBe(data)
       })
   }
@@ -53,7 +54,7 @@ export const stepDefinitions = defineSteps(
 
 #### Information
 :::caution  Exporting
-Scenario context is bound to the current scenario, you can't share data between scenarios
+Scenario context is bound to the current scenario, you can't share data between scenarios.
 :::
 
 :::danger Spreading

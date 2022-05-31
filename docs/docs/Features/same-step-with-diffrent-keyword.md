@@ -4,87 +4,72 @@ sidebar_position: 3
 
 # Same step with different keyword
 
-Sometimes, we got the same step but without the same keyword like this :
+Sometimes, we have the same step but without the same keyword like this :
 
 ```
 Feature: A simple feature file
 
     Scenario: First scenario
         Given given step
-        And another given step
+        And given step
         When when step shared
-        And another when/given step
+        And given step
         Then then step
 ```
 
 You will certainly doing something like this :
 
 ```javascript
-import { defineSteps } from "specflow-emulator"
+import { defineSteps } from "specflow-emulator";
 
 export const stepDefinitions = defineSteps(
-  [{ feature: "A simple feature file "}],
+  [{ feature: "A simple feature file " }],
   ({ Given, Then, When }) => {
+    Given("given step", scenarioContext => (data) => {
+      // do something
+    });
 
-      Given("given step", (scenarioContext) => (data) => {
-         // do something
-      })
+    When("when step shared", () => () => {
+      // do something
+    });
 
-      Given("another given step", (scenarioContext) => (data) => {
-         // do something
-      })
+    When("given step", () => () => {
+      // do something for when / given
+    });
 
-      Given("another when/given step", () => () => {
-        // do something for when / given
-      }))
-
-      When("When Step", () => () => {
-        // do something
-      });
-
-      When("another when/given step", () => () => {
-        // do something for when / given
-      }))
-
-      Then("Then step", (scenarioContext) => () => {
-          // do something else
-      })
+    Then("then step", scenarioContext => () => {
+      // do something else
+    });
   }
+);
 ```
 
 But in this scenario, you can just tweak a little your stepDefinitions in order to accept a list of step function like this :
 
 ```javascript
-import { defineSteps } from "specflow-emulator"
+import { defineSteps } from "specflow-emulator";
 
 export const stepDefinitions = defineSteps(
-  [{ feature: "A simple feature file "}],
+  [{ feature: "A simple feature file " }],
   ({ Given, Then, When }) => {
-
-      Given("given step", (scenarioContext) => (data) => {
-         // do something
-      })
-
-      Given("another given step", (scenarioContext) => (data) => {
-         // do something
-      })
-
-      When("When Step", () => () => {
-        // do something
-      });
-
-    [Given, When].forEach(stepMethod => stepMethod("another when/given step", () => () => {
+    [Given, When].forEach(stepMethod =>
+      stepMethod("given step", () => () => {
         // do something for when / given
-      }))
-
-
-      Then("Then step", (scenarioContext) => () => {
-          // do something else
       })
+    );
+
+    When("when Step", () => () => {
+      // do something
+    });
+
+    Then("Then step", scenarioContext => () => {
+      // do something else
+    });
   }
+);
 ```
 
-And now when you will use the same step for `Given` or `When`, the library will just bind it properly, no need to recreate another functions.
+And now when you will use the same step for `Given` or `When`. The library will automatically bind it properly itself : you don't need to recreate functions for each keywords your steps are used with.
 
 :::tip Shared step
 This tweak work also with shared steps.
