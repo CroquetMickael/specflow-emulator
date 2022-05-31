@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Multiple feature for one entry point
 
-You can declare multiple `defineFeature` in the same `steps.js`, that permit to split feature files.
+You can declare multiple `defineFeature` in the same `steps.js`, that permit you to split your feature in multiple files.
 
 :::caution Performance
 This could lead to a low performance for this type of `steps.js` file.
