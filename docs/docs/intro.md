@@ -4,7 +4,6 @@ sidebar_position: 1
 
 # Getting started
 
-
 ## Adding specflow-emulator on your project
 
 ```shell
@@ -22,7 +21,7 @@ $ pnpm add -D specflow-emulator
 
 ### Vitest
 
-Using vitest, you have to had some configuration on `vite.config.js`:
+Using vitest, you have to add some configuration on `vite.config.js`:
 
 ```javascript
 export default defineConfig({
@@ -57,7 +56,7 @@ Using jest, you have to had some configuration on your `package.json` or your `j
 ```json
 "jest": {
 "transformIgnorePatterns": [
-      "node_modules/(?!specflow-emulator)/)"
+      "node_modules/(?!specflow-emulator)/"
     ],
     "testMatch": [
       "**/__tests__/**/*.[jt]s?(x)",

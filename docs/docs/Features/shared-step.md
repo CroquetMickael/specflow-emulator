@@ -22,7 +22,7 @@ Feature: A simple feature file
         Then then step 2
 ```
 
-`specflow-emulator` provide a new way to create shared step in the same feature file, using `jest-cucumber` would require to create multiple function like this :
+`specflow-emulator` provide a new way to create shared steps in the same feature file. Using `jest-cucumber` would require to create multiple function like this :
 
 ```javascript
   const aSharedStep = (when) => {
@@ -73,7 +73,7 @@ Feature: A simple feature file
   }
 ```
 
-Sometimes, you will have a lot more scenario case, using this method, it's painfull for the readibility, finding the function, where it have been declared etc...
+Sometimes, you will have a lot more scenario case. Using this method is painfull for the readibility, finding the function, where it have been declared, etc.
 
 With `specflow-emulator`, you will just have to declare one time your steps, like this :
 
@@ -84,7 +84,7 @@ export const stepDefinitions = defineSteps(
   [{ feature: "A simple feature file "}],
   ({ Given, Then, When }) => {
 
-      Given("given step", (scenarioContext) => (data) => {
+      Given("given step", scenarioContext => data => {
          // do something
       })
 
@@ -92,7 +92,7 @@ export const stepDefinitions = defineSteps(
         // do something
       })
 
-      Then("Then step", (scenarioContext) => () => {
+      Then("Then step", scenarioContext => () => {
           // do something else
       })
   }
@@ -100,10 +100,9 @@ export const stepDefinitions = defineSteps(
 
 You don't need to do anything else, the pool will automaticly bind your step.
 
+## Shared step between feature files
 
-## Shared step between feature file
-
-`specflow-emulator` permit to share steps between multiple feature file, based on a tag system, let's imagine two feature file:
+`specflow-emulator` allows to share steps between multiple feature files, based on a tag system. Let's imagine two feature files :
 
 ```
 Feature: A simple feature file
@@ -117,7 +116,6 @@ Feature: A simple feature file
         Given given step 2
         When when step shared
         Then then step 2
-
 ```
 
 ```
@@ -134,24 +132,24 @@ Feature: A simple feature file 2
         Then then step 2
 ```
 
-Here we got the same `When` step shared between those two feature, in `jest-cucumber` you will need to create a file and the export the function of the step in order to reuse it.
-In `specflow-emulator`, you can create a `shared.common.stepdefinitions.js` and then just declare it like this :
+Here we have the same `When` step shared between those two feature. In `jest-cucumber` you will need to create a file and the export the function of the step in order to reuse it.
+In `specflow-emulator`, you can create a `shared.common.stepdefinitions.js` and then just declare it this way :
 
 ```javascript
 import { defineSteps } from "__features__/specflowEmulator";
 
 export const stepDefinitions = defineSteps([{ tag: "tagName" }], ({ When }) => {
-  When("when step shared", (scenarioContext) => () => {
+  When("when step shared", scenarioContext => () => {
     // do something
   });
 });
 ```
 
 :::danger Same tag name
-Don't create the same tag in multiple stepdefinitions file, the library won't know which step to use
+Don't create the same tag in multiple stepdefinitions file, the library won't know which step to use.
 :::
 
-And then just use it like this in your feature files:
+And then just use it like this in your feature files :
 
 ```
 @tagName
@@ -191,5 +189,5 @@ You can add multiple tag for the same file !
 :::
 
 :::tip Share step from any stepdefinitions file
-You can also share step from any stepdefinitions, just add a tag like above
+You can also share step from any stepdefinitions, just add a tag like above.
 :::
