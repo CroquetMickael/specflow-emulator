@@ -9,11 +9,11 @@ const config = {
   title: "Specflow-emulator",
   tagline: "Dinosaurs are cool",
   url: "https://your-docusaurus-test-site.com",
-  baseUrl: "/",
+  baseUrl: "/specflow-emulator",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "CroquetMickael/specflow-emulator", // Usually your GitHub org/user name.
+  organizationName: "CroquetMickael", // Usually your GitHub org/user name.
   projectName: "specflow-emulator", // Usually your repo name.
 
   presets: [
