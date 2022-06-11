@@ -4,7 +4,7 @@ import {
     ParsedScenarioOutline,
     ParsedStep,
   } from 'jest-cucumber/dist/src/models';
-import { bold, green, red, yellow } from 'kleur';
+import kleur from 'kleur';
 import { StepDefinition } from './StepDefinition';
 
 const endOfLine = '\r\n';
@@ -17,35 +17,35 @@ export const formatStepMatchingError = (
     step: ParsedStep,
     matchingStepDefinition: StepDefinition[],
   ) => {
-    let error = `Impossible to bind a step in file : ${endOfLine}${red(
+    let error = `Impossible to bind a step in file : ${endOfLine}${kleur.red(
       fichierFeature,
     )}${lineSeparator}`;
-    error += `${bold(yellow('feature'))} : ${feature.title}${endOfLine}`;
-    error += `${bold(yellow('scenario'))}: ${scenario.title} (ligne ${
+    error += `${kleur.bold(kleur.yellow('feature'))} : ${feature.title}${endOfLine}`;
+    error += `${kleur.bold(kleur.yellow('scenario'))}: ${scenario.title} (ligne ${
       scenario.lineNumber
     })${endOfLine}`;
-    error += `${bold(yellow('step'))}    : ${step.stepText} (ligne ${
+    error += `${kleur.bold(kleur.yellow('step'))}    : ${step.stepText} (ligne ${
       step.lineNumber
     })${lineSeparator}`;
 
     if (!matchingStepDefinition.length) {
-      error += `${endOfLine}${bold(
-        red('No step definition have been found.'),
+      error += `${endOfLine}${kleur.bold(
+        kleur.red('No step definition have been found.'),
       )}${lineSeparator}${endOfLine}`;
       return error;
     }
 
-    error += `${endOfLine}${bold(
-      green(
+    error += `${endOfLine}${kleur.bold(
+      kleur.green(
         `${matchingStepDefinition.length} définitions of same step found:`,
       ),
     )}`;
     matchingStepDefinition.forEach(({ block, match, scopes, cheminFichier }) => {
       error += lineSeparator;
-      error += `${bold(yellow('fichier'))}: ${cheminFichier}${endOfLine}`;
-      error += `${bold(yellow('block'))}  : ${block}${endOfLine}`;
-      error += `${bold(yellow('matcher'))}: ${match}${endOfLine}`;
-      error += `${bold(yellow('scopes'))} : ${JSON.stringify(scopes)}`;
+      error += `${kleur.bold(kleur.yellow('fichier'))}: ${cheminFichier}${endOfLine}`;
+      error += `${kleur.bold(kleur.yellow('block'))}  : ${block}${endOfLine}`;
+      error += `${kleur.bold(kleur.yellow('matcher'))}: ${match}${endOfLine}`;
+      error += `${kleur.bold(kleur.yellow('scopes'))} : ${JSON.stringify(scopes)}`;
     });
 
     return error;
