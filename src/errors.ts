@@ -5,7 +5,7 @@ import {
     ParsedStep,
   } from 'jest-cucumber/dist/src/models';
 import kleur from 'kleur';
-import { StepDefinition } from './StepDefinition';
+import { StepDefinition } from './stepDefinition';
 
 const endOfLine = '\r\n';
 const lineSeparator = endOfLine + ''.padEnd(50, '-') + endOfLine;
