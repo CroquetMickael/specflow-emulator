@@ -5,7 +5,7 @@ import {
     StepCallback,
     StepMatcher,
   } from './common.types';
-import { StepDefinition } from './StepDefinition';
+import { StepDefinition } from './stepDefinition';
 
 interface IDefineStepCallbacks {
     Given: DefineStepCallback;
