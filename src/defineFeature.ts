@@ -10,7 +10,7 @@ import {
 import { DefineScenarioFunction } from "jest-cucumber/dist/src/feature-definition-creation";
 import { StepBlock } from "./common.types";
 import { formatStepMatchingError } from "./errors";
-import { StepDefinition } from "./StepDefinition";
+import { StepDefinition } from "./stepDefinition";
 import { loadFeature } from "jest-cucumber/dist/src/parsed-feature-loading";
 
 
