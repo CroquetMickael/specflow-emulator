@@ -19,6 +19,10 @@ $ pnpm add -D specflow-emulator
 
 ## Configuration
 
+:::info  Under the hood
+To make specflow-emulator work, we use `jest-cucumber` under the hood, we only provide support for `Jest` and `Vitest`
+:::
+
 ### Vitest
 
 Using vitest, you have to add some configuration on `vite.config.js`:
@@ -26,12 +30,12 @@ Using vitest, you have to add some configuration on `vite.config.js`:
 ```javascript
 export default defineConfig({
   test: {
-    global: true,
+    globals: true,
     include: [
       "**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
       "**/*.steps.js",
     ],
-    environment: "choose your environnement here",
+    environment: "choose your environnement here" // see: https://vitest.dev/guide/environment.html,
     setupFiles: ["./setupTests.js"],
     watch: true,
     deps: {
@@ -78,7 +82,3 @@ loadStepsJest();
 Yes, nothing is related with `Vue.js` or `React.js`, you can do some test with them.
 
 Examples here : [React / Javascript Examples](https://github.com/CroquetMickael/specflow-emulator/tree/main/examples)
-
-## Other test framework
-
-Currently, we are using `jest-cucumber` behind the door, that's mean we can't provide more test framework like `mocha` or anything else.

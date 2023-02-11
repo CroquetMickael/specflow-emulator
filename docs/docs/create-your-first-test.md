@@ -57,7 +57,7 @@ export const stepDefinitions = defineSteps();
 ```
 
 :::danger Exporting
-Don't forget to export this `const` in order to provide the steps to `specflow-emulator`. If you don't do that it will never be possible to provide your steps to the pool.
+Don't forget to export this `const` named `stepDefinitions` in order to provide the steps to `specflow-emulator`. If you don't do that it will never be possible to provide your steps to the pool.
 :::
 
 ### Usage
@@ -70,7 +70,7 @@ With our example, the feature implementation would start to look like this:
 
 ```javascript
 export const stepDefinitions = defineSteps(
-  [{ feature: "Simple Calculator", tag: "feature" }],
+  [{ feature: "Simple Calculator" }, { tag: "feature" }],
   ({ Given, When, Then }) => {
 
   }
@@ -84,7 +84,7 @@ In our example case, it would be like this:
 import { defineSteps } from "specflow-emulator";
 
 export const stepDefinitions = defineSteps(
-  [{ feature: "Simple Calculator", tag: "feature" }],
+  [{ feature: "Simple Calculator" }, { tag: "feature" }],
   ({ Given, When, Then }) => {
     Given(/^Number "(.*)"$/, (scenarioContext) => (number) => {
       if (scenarioContext.number) {
