@@ -8,7 +8,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const config = {
   title: "Specflow-emulator",
   tagline: "Dinosaurs are cool",
-  url: "https://your-docusaurus-test-site.com",
+  url: "https://croquetmickael.github.io",
   baseUrl: "/specflow-emulator",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
