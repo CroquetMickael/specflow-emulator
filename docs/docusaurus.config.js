@@ -7,14 +7,15 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Specflow-emulator",
-  tagline: "Dinosaurs are cool",
+  tagline: "Make your BDD test mindblow",
   url: "https://croquetmickael.github.io",
-  baseUrl: "/specflow-emulator",
+  baseUrl: "/specflow-emulator/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "CroquetMickael", // Usually your GitHub org/user name.
   projectName: "specflow-emulator", // Usually your repo name.
+  trailingSlash: false,
 
   presets: [
     [
