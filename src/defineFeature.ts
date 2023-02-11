@@ -13,9 +13,8 @@ import { formatStepMatchingError } from "./errors";
 import { StepDefinition } from "./stepDefinition";
 import { loadFeature } from "jest-cucumber/dist/src/parsed-feature-loading";
 
-
 const stepNotExportedString = (filePath: string) =>
-`Le fichier ${filePath} n'exporte pas de variable stepDefinitions`;
+  `Le fichier ${filePath} n'exporte pas de variable stepDefinitions`;
 
 const stepPool: StepDefinition[] = [];
 let isLoaded = false;
@@ -29,7 +28,6 @@ export const defineFeature = (
   const cheminAbsolu = isCheminRelatif
     ? `${dossierAppelant}/${cheminFichier}`
     : cheminFichier;
-
 
   const feature = loadFeature(cheminAbsolu, {
     loadRelativePath: false,
@@ -118,9 +116,9 @@ export const loadSteps = async (dossier = "./src/__features__") => {
 
   for (let i = 0; i < fichiers.length; i++) {
     const cheminFichier = fichiers[i];
-    const { stepDefinitions } = (await import(
-      path.resolve(cheminFichier)
-    )) as unknown as { stepDefinitions: StepDefinition[] };
+    const { stepDefinitions } = (await import(path.resolve(cheminFichier))) as {
+      stepDefinitions: StepDefinition[];
+    };
 
     if (!stepDefinitions) {
       console.error(stepNotExportedString(cheminFichier));
