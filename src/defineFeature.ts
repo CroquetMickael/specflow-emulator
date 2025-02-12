@@ -132,29 +132,3 @@ export const loadSteps = async (dossier = "./src/__features__") => {
   isLoaded = true;
 };
 
-export const loadStepsJest = (dossier = "./src/__features__") => {
-  if (isLoaded) {
-    return;
-  }
-
-  stepPool.length = 0;
-  const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx,ts,tsx}`;
-  const fichiers = glob.sync(patternFichier);
-
-  for (let i = 0; i < fichiers.length; i++) {
-    const cheminFichier = fichiers[i];
-    const { stepDefinitions } = require(path.resolve(cheminFichier)) as {
-      stepDefinitions: StepDefinition[];
-    };
-
-    if (!stepDefinitions) {
-      console.error(stepNotExportedString(cheminFichier));
-      return;
-    }
-    stepDefinitions.forEach((stepDefinition) => {
-      stepDefinition.cheminFichier = cheminFichier;
-      stepPool.push(stepDefinition);
-    });
-  }
-  isLoaded = true;
-};
