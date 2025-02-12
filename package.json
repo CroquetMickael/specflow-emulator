@@ -17,7 +17,6 @@
   "keywords": [
     "gherkin",
     "specflow",
-    "jest",
     "vitest"
   ],
   "author": "David Saffrey",
