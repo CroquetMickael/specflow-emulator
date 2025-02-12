@@ -9,9 +9,9 @@ sidebar_position: 2
 If you didn't change the base folder in your setup test file, do as follow :
 
 ```javascript
-import { loadStepsJest } from "specflow-emulator";
+import { loadSteps } from "specflow-emulator";
 
-loadStepsJest();
+loadSteps();
 ```
 
 That's means, you will have to create a folder `__features__` inside `src`. Then you can create subfolders for your tests in it or directly create test files.

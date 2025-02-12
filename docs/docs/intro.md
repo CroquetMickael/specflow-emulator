@@ -20,7 +20,7 @@ $ pnpm add -D specflow-emulator
 ## Configuration
 
 :::info  Under the hood
-To make specflow-emulator work, we use `jest-cucumber` under the hood, we only provide support for `Jest` and `Vitest`
+To make specflow-emulator work, we use `jest-cucumber` under the hood, we only provide support for `Vitest`
 :::
 
 ### Vitest
@@ -51,30 +51,6 @@ Then setup your setup test file like this :
 import { loadSteps } from "specflow-emulator";
 
 await loadSteps();
-```
-
-### Jest
-
-Using jest, you have to had some configuration on your `package.json` or your `jest.config.js`:
-
-```json
-"jest": {
-"transformIgnorePatterns": [
-      "node_modules/(?!specflow-emulator)/"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.[jt]s?(x)",
-      "**/?(*.)+(spec|test|steps).[jt]s?(x)"
-    ],
-}
-```
-
-Then setup your setup test file like this :
-
-```javascript
-import { loadStepsJest } from "specflow-emulator";
-
-loadStepsJest();
 ```
 
 ## Does this work with Vue/React
