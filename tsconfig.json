@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES2022",
         "declaration": true,
         "module": "ES2020",
         "sourceMap": true,
