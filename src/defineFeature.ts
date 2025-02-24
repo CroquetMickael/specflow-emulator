@@ -1,6 +1,6 @@
-import { defineFeature as getFeature } from "jest-cucumber/dist/src/feature-definition-creation";
+import { IJestLike, Options, defineFeature as getFeature } from "jest-cucumber";
 import callsites from "callsites";
-import glob from "glob";
+import { glob } from "glob";
 import path from "path";
 
 import {
@@ -18,6 +18,8 @@ const stepNotExportedString = (filePath: string) =>
 
 const stepPool: StepDefinition[] = [];
 let isLoaded = false;
+let internalRunner: IJestLike = undefined;
+
 export const defineFeature = (
   cheminFichier: string,
   isCheminRelatif = true
@@ -29,15 +31,20 @@ export const defineFeature = (
     ? `${dossierAppelant}/${cheminFichier}`
     : cheminFichier;
 
-  const feature = loadFeature(cheminAbsolu, {
+  const config: Options = {
     loadRelativePath: false,
     errors: {
-      missingScenarioInStepDefinitions: true,
-      missingStepInStepDefinitions: true,
-      missingScenarioInFeature: true,
-      missingStepInFeature: true,
-    },
-  });
+      allowScenariosNotInFeatureFile: false,
+      scenariosMustMatchFeatureFile: true,
+      stepsMustMatchFeatureFile: true
+    }
+  }
+
+  if (internalRunner && Object.keys(internalRunner).length > 0) {
+    config.runner = internalRunner
+  }
+
+  const feature = loadFeature(cheminAbsolu, config);
 
   const getNewBlock = (
     stepKeyword: string,
@@ -105,7 +112,10 @@ export const defineFeature = (
   });
 };
 
-export const loadSteps = async (dossier = "./src/__features__") => {
+export const loadSteps = async ({ runner = undefined, dossier = "./src/__features__" }: {
+  runner?: IJestLike,
+  dossier: string
+}) => {
   if (isLoaded) {
     return;
   }
@@ -129,6 +139,10 @@ export const loadSteps = async (dossier = "./src/__features__") => {
       stepPool.push(stepDefinition);
     });
   }
+  if (runner && Object.keys(runner).length > 0) {
+    internalRunner = runner;
+  }
+
   isLoaded = true;
 };
 
