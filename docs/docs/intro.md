@@ -19,8 +19,8 @@ $ pnpm add -D specflow-emulator
 
 ## Configuration
 
-:::info  Under the hood
-To make specflow-emulator work, we use `jest-cucumber` under the hood, we only provide support for `Vitest`
+:::info Under the hood
+To make specflow-emulator work, we use `jest-cucumber` under the hood;
 :::
 
 ### Vitest
@@ -50,8 +50,23 @@ Then setup your setup test file like this :
 ```javascript
 import { loadSteps } from "specflow-emulator";
 
-await loadSteps();
+await loadSteps({});
 ```
+
+## Any other test runner
+
+```javascript
+import { loadSteps } from "specflow-emulator";
+import { describe, test } from "MyTestRunner";
+
+await loadSteps({
+  runner: {
+    describe,
+    test,
+  },
+});
+```
+
 
 ## Does this work with Vue/React
 
