@@ -47,6 +47,6 @@ export class StepDefinition {
     this.selectJestCallback = getJestCallbackSelector(block);
   }
 
-  public hasMatchingScopes = (feature: string, scenario: string, tags: string[]) => 
+  public hasMatchingScopes = (feature: string, scenario: string, tags: string[]) =>
     this.scopes.some((scope) => matchScope(scope, feature, scenario, tags))
 }
