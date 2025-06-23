@@ -36,12 +36,12 @@ export const defineFeature = (
     errors: {
       allowScenariosNotInFeatureFile: false,
       scenariosMustMatchFeatureFile: true,
-      stepsMustMatchFeatureFile: true
-    }
-  }
+      stepsMustMatchFeatureFile: true,
+    },
+  };
 
   if (internalRunner && Object.keys(internalRunner).length > 0) {
-    config.runner = internalRunner
+    config.runner = internalRunner;
   }
 
   const feature = loadFeature(cheminAbsolu, config);
@@ -112,9 +112,12 @@ export const defineFeature = (
   });
 };
 
-export const loadSteps = async ({ runner = undefined, dossier = "./src/__features__" }: {
-  runner?: IJestLike,
-  dossier: string
+export const loadSteps = async ({
+  runner = undefined,
+  dossier = "./src/__features__",
+}: {
+  runner?: IJestLike;
+  dossier?: string;
 }) => {
   if (isLoaded) {
     return;
@@ -145,4 +148,3 @@ export const loadSteps = async ({ runner = undefined, dossier = "./src/__feature
 
   isLoaded = true;
 };
-
