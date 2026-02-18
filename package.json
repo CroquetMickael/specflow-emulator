@@ -1,6 +1,6 @@
 {
   "name": "specflow-emulator",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A specflow emulator for jest-cucumber, working on jest and vitest",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -27,12 +27,11 @@
   "homepage": "https://github.com/CroquetMickael/specflow-emulator#readme",
   "dependencies": {
     "callsites": "4.2.0",
-    "glob": "11.0.1",
+    "glob": "13.0.5",
     "jest-cucumber": "4.5.0",
     "kleur": "4.1.5"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0",
     "@types/node": "^22.13.5",
     "@types/jest": "29.5.14",
     "tslint": "6.1.3",
