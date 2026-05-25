@@ -10,11 +10,8 @@ export default defineConfig({
       "**/*.steps.js",
     ],
     environment: 'jsdom',
+    globalSetup: ['./vitest.global-setup.js'],
     setupFiles: ["./setupTests.js"],
-    watch: true,
-    deps: {
-      inline: ['specflow-emulator'],
-    },
   },
   plugins: [react()],
 });
