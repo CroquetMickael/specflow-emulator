@@ -1,2 +1,2 @@
 export { defineSteps } from './defineSteps';
-export { defineFeature, loadSteps, resolveStepFiles, resetSteps } from './defineFeature';
+export { defineFeature, loadSteps } from './defineFeature';

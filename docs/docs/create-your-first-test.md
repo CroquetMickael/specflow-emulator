@@ -17,8 +17,6 @@ await loadSteps({});
 
 That's means, you will have to create a folder `__features__` inside `src`. Then you can create subfolders for your tests in it or directly create test files.
 
-If you keep your step definitions elsewhere, point `loadSteps` at that folder with `await loadSteps({ dir: "./path/to/features" })`.
-
 `specflow-emulator` provide a new way to use `cucumber` and `jest-cucumber`. First you will have to create a test file name like: `nameOfYourFile.steps.js`.
 
 ```javascript

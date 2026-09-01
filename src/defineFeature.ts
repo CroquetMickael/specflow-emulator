@@ -1,6 +1,6 @@
 import { IJestLike, Options, defineFeature as getFeature } from "jest-cucumber";
 import callsites from "callsites";
-import { globSync } from "glob";
+import { glob } from "glob";
 import path from "path";
 
 import {
@@ -13,29 +13,12 @@ import { formatStepMatchingError } from "./errors";
 import { StepDefinition } from "./stepDefinition";
 import { loadFeature } from "jest-cucumber/dist/src/parsed-feature-loading";
 
-const STEP_DEFINITIONS_GLOB = "**/*.stepdefinitions.{js,jsx,ts,tsx}";
-
 const stepNotExportedString = (filePath: string) =>
-  `File ${filePath} does not export a stepDefinitions variable`;
+  `Le fichier ${filePath} n'exporte pas de variable stepDefinitions`;
 
 const stepPool: StepDefinition[] = [];
-/** Promise lock: prevents concurrent calls to loadSteps from creating duplicates */
-let loadingPromise: Promise<void> | null = null;
-let internalRunner: IJestLike | undefined = undefined;
-
-/**
- * Resolves the list of step definition file paths matching the given directory.
- * This is a pure I/O operation (glob scan) that returns serializable strings.
- * Designed to be called once in a globalSetup file and its result shared with
- * worker processes via Vitest's `provide`/`inject` or an environment variable.
- *
- * @param dir - Directory to scan (default: `"./src/__features__"`)
- * @returns Absolute paths of all matching step definition files
- */
-export const resolveStepFiles = (dir = "./src/__features__"): string[] => {
-  const pattern = `${dir}/${STEP_DEFINITIONS_GLOB}`;
-  return globSync(pattern).map((f) => path.resolve(f));
-};
+let isLoaded = false;
+let internalRunner: IJestLike = undefined;
 
 export const defineFeature = (
   cheminFichier: string,
@@ -129,90 +112,39 @@ export const defineFeature = (
   });
 };
 
-/**
- * Loads all step definitions into the step pool.
- *
- * @param options.runner   - Custom test runner (e.g. `{ describe, test }` for non-Vitest runners)
- * @param options.dir      - Directory to scan when `files` is not provided (default: `"./src/__features__"`)
- * @param options.files    - Pre-resolved list of absolute file paths produced by `resolveStepFiles()`.
- *                           When provided, the glob scan is **skipped entirely** — useful in fork/worker
- *                           mode where the glob was already done once in `globalSetup`.
- *
- * @example Vitest — globalSetup + provide/inject (recommended for fork mode)
- * ```js
- * // vitest.global-setup.js  (runs once in the main process)
- * import { resolveStepFiles } from 'specflow-emulator';
- * export const setup = ({ provide }) => { provide('stepFiles', resolveStepFiles()); };
- *
- * // setupTests.js  (runs once per worker/fork)
- * import { inject } from 'vitest';
- * import { loadSteps } from 'specflow-emulator';
- * await loadSteps({ files: inject('stepFiles') });
- * ```
- *
- * @example Jest — globalSetup + env variable
- * ```js
- * // jest.global-setup.js
- * const { resolveStepFiles } = require('specflow-emulator');
- * module.exports = async () => { process.env.STEP_FILES = JSON.stringify(resolveStepFiles()); };
- *
- * // setupTests.js
- * const { loadSteps } = require('specflow-emulator');
- * const files = process.env.STEP_FILES ? JSON.parse(process.env.STEP_FILES) : undefined;
- * await loadSteps({ files });
- * ```
- */
-export const loadSteps = ({
+export const loadSteps = async ({
   runner = undefined,
-  dir = "./src/__features__",
-  files = undefined,
+  dossier = "./src/__features__",
 }: {
   runner?: IJestLike;
-  /** @deprecated Use `dir` instead */
   dossier?: string;
-  dir?: string;
-  files?: string[];
-} = {}): Promise<void> => {
-  // Promise lock: if a load is already in progress (or done), return the same promise.
-  // This fixes the race condition where two concurrent callers both pass a boolean guard.
-  if (loadingPromise) {
-    return loadingPromise;
+}) => {
+  if (isLoaded) {
+    return;
   }
 
-  loadingPromise = (async () => {
-    stepPool.length = 0;
-
-    const resolvedFiles = files ?? resolveStepFiles(dir);
-
-    for (const filePath of resolvedFiles) {
-      const { stepDefinitions } = (await import(filePath)) as {
-        stepDefinitions: StepDefinition[];
-      };
-
-      if (!stepDefinitions) {
-        console.error(stepNotExportedString(filePath));
-        return;
-      }
-      stepDefinitions.forEach((stepDefinition) => {
-        stepDefinition.cheminFichier = filePath;
-        stepPool.push(stepDefinition);
-      });
-    }
-
-    if (runner && Object.keys(runner).length > 0) {
-      internalRunner = runner;
-    }
-  })();
-
-  return loadingPromise;
-};
-
-/**
- * Resets the step pool and allows `loadSteps` to be called again.
- * Useful for test isolation when running multiple suites in the same process.
- */
-export const resetSteps = (): void => {
   stepPool.length = 0;
-  loadingPromise = null;
-  internalRunner = undefined;
+  const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx,ts,tsx}`;
+  const fichiers = glob.sync(patternFichier);
+
+  for (let i = 0; i < fichiers.length; i++) {
+    const cheminFichier = fichiers[i];
+    const { stepDefinitions } = (await import(path.resolve(cheminFichier))) as {
+      stepDefinitions: StepDefinition[];
+    };
+
+    if (!stepDefinitions) {
+      console.error(stepNotExportedString(cheminFichier));
+      return;
+    }
+    stepDefinitions.forEach((stepDefinition) => {
+      stepDefinition.cheminFichier = cheminFichier;
+      stepPool.push(stepDefinition);
+    });
+  }
+  if (runner && Object.keys(runner).length > 0) {
+    internalRunner = runner;
+  }
+
+  isLoaded = true;
 };
