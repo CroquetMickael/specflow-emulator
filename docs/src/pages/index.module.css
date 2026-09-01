@@ -20,7 +20,15 @@
   max-width: 720px;
   margin: 0 auto 2rem;
   font-size: 1.1rem;
-  opacity: 0.95;
+}
+
+/* Inline code is unreadable with the default light pill on the green hero. */
+.heroBanner code {
+  background: rgba(0, 0, 0, 0.28);
+  color: #fff;
+  border: none;
+  padding: 0.15em 0.4em;
+  font-size: 0.9em;
 }
 
 .buttons {
