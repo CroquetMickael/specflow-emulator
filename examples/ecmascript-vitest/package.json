@@ -8,8 +8,9 @@
     "vitest": "vitest --verbose"
   },
   "devDependencies": {
-    "vite": "^2.7.10",
-    "vitest": "0.0.125"
+    "specflow-emulator": "../..",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   },
   "dependencies": {}
 }
