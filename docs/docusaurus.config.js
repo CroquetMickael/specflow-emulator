@@ -7,7 +7,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Specflow-emulator",
-  tagline: "Make your BDD test mindblow",
+  tagline: "Write your Gherkin steps once, bind them everywhere",
   url: "https://croquetmickael.github.io",
   baseUrl: "/specflow-emulator/",
   onBrokenLinks: "throw",

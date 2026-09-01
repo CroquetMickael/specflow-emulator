@@ -4,42 +4,76 @@ import styles from './HomepageFeatures.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
+    icon: '🎯',
+    title: 'One step pool',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Declare each <code>Given</code> / <code>When</code> / <code>Then</code>{' '}
+        once. The pool is matched against every scenario in your{' '}
+        <code>.feature</code> files — no <code>test()</code> boilerplate.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
+    icon: '♻️',
+    title: 'Shared steps, zero glue',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        A step reused across scenarios or features just works. Share across
+        feature files with a tag instead of exporting helper functions.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
+    icon: '🏷️',
+    title: 'Scoped on purpose',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Restrict a step to a feature, a scenario or a tag so identically worded
+        steps never collide.
+      </>
+    ),
+  },
+  {
+    icon: '🧩',
+    title: 'Scenario context',
+    description: (
+      <>
+        Every scenario gets a fresh context object to pass data between steps —
+        no module-level mutable state.
+      </>
+    ),
+  },
+  {
+    icon: '🧭',
+    title: 'Errors that point at the line',
+    description: (
+      <>
+        When a step matches zero or several definitions you get a formatted
+        error naming the feature, scenario, step and file.
+      </>
+    ),
+  },
+  {
+    icon: '⚡',
+    title: 'Jest, Vitest & the browser',
+    description: (
+      <>
+        Same API on Jest and Vitest. A dedicated{' '}
+        <code>specflow-emulator/browser</code> entry point covers Vitest browser
+        mode (alpha).
       </>
     ),
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({icon, title, description}) {
   return (
-    <div className={clsx('col col--4')}>
+    <div className={clsx('col col--4', styles.feature)}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} alt={title} />
+        <span className={styles.featureIcon} role="img" aria-label={title}>
+          {icon}
+        </span>
       </div>
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>

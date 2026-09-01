@@ -16,8 +16,31 @@
   }
 }
 
+.heroBlurb {
+  max-width: 720px;
+  margin: 0 auto 2rem;
+  font-size: 1.1rem;
+  opacity: 0.95;
+}
+
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.section {
+  padding: 3.5rem 0;
+}
+
+.sectionAlt {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.sectionLead {
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  font-size: 1.05rem;
 }
