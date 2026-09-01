@@ -57,7 +57,8 @@ await loadSteps({});
 
 Running in [Vitest browser mode](https://vitest.dev/guide/browser/) requires the
 dedicated `specflow-emulator/browser` entry point (no `fs` / `glob` in the
-browser). See [Vitest browser mode](./Features/vitest-browser-mode.md).
+browser). Available in the alpha releases (`specflow-emulator@alpha`) — see
+[Vitest browser mode](./Features/vitest-browser-mode.md).
 
 ## Any other test runner
 

@@ -4,6 +4,10 @@ sidebar_position: 6
 
 # Vitest browser mode
 
+:::caution Alpha
+This entry point is only in the alpha releases: `npm i -D specflow-emulator@alpha`.
+:::
+
 `specflow-emulator` ships a dedicated entry point, `specflow-emulator/browser`, for
 [Vitest browser mode](https://vitest.dev/guide/browser/). Tests then run inside a
 real browser, where `fs` / `glob` are not available, so two things change compared
