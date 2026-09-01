@@ -15,6 +15,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check NPM_TOKEN is configured
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "${NPM_TOKEN:-}" ]; then
+            echo "::error::Repository secret NPM_TOKEN is missing/empty. Add it under" \
+                 "Settings > Secrets and variables > Actions as a *repository* secret" \
+                 "(an npm granular or automation token with publish rights)."
+            exit 1
+          fi
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
