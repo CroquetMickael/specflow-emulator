@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # create the GitHub Release
+  id-token: write # npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      # Tag `vX.Y.Z`        -> npm dist-tag `latest`
+      # Tag `vX.Y.Z-alpha.N` -> npm dist-tag `alpha`  (same for beta / rc / ...)
+      - name: Resolve version and dist-tag
+        id: meta
+        run: |
+          set -euo pipefail
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version ($PKG_VERSION)"
+            exit 1
+          fi
+          case "$TAG_VERSION" in
+            *-*) DIST_TAG="${TAG_VERSION#*-}"; DIST_TAG="${DIST_TAG%%.*}" ;;
+            *)   DIST_TAG="latest" ;;
+          esac
+          echo "dist_tag=$DIST_TAG" >> "$GITHUB_OUTPUT"
+          echo "Publishing $PKG_VERSION with dist-tag '$DIST_TAG'"
+
+      - run: npm publish --provenance --access public --tag "${{ steps.meta.outputs.dist_tag }}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.meta.outputs.dist_tag }}" = "latest" ]; then
+            gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes --latest
+          else
+            gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes --prerelease
+          fi

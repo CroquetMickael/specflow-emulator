@@ -1,0 +1,48 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+# Needed to push the built site to the gh-pages branch.
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
+
+      # `npm install` (not `npm ci`): docs/package-lock.json is an old
+      # Docusaurus 2.0.0-beta.14 lock that no longer resolves cleanly. Run
+      # `npm install` locally and commit a fresh lock to switch back to `npm ci`.
+      - run: npm install --no-audit --no-fund
+
+      - run: npm run build
+
+      # Publishes docs/build to the gh-pages branch, which GitHub Pages serves.
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build
+          force_orphan: true
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
