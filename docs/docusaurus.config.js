@@ -24,9 +24,19 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/CroquetMickael/specflow-emulator/tree/main/docs/",
+          // `2.0` is the released version served at /docs/.
+          // The `current` docs (the docs/ folder) hold unreleased work
+          // (e.g. the Vitest browser mode alpha) and are served at /docs/next/.
+          lastVersion: "2.0",
+          versions: {
+            current: {
+              label: "Next (alpha) 🚧",
+              path: "next",
+              banner: "unreleased",
+            },
+          },
         },
         blog: {
           showReadingTime: true,
@@ -56,6 +66,10 @@ const config = {
             docId: "intro",
             position: "left",
             label: "Guide",
+          },
+          {
+            type: "docsVersionDropdown",
+            position: "right",
           },
           {
             href: "https://github.com/CroquetMickael/specflow-emulator",
