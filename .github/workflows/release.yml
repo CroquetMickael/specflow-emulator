@@ -15,22 +15,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check NPM_TOKEN is configured
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [ -z "${NPM_TOKEN:-}" ]; then
-            echo "::error::Repository secret NPM_TOKEN is missing/empty. Add it under" \
-                 "Settings > Secrets and variables > Actions as a *repository* secret" \
-                 "(an npm granular or automation token with publish rights)."
-            exit 1
-          fi
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
           cache: npm
+
+      - name: Verify npm auth
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::secrets.NPM_TOKEN is empty in this job."
+            echo "It must be a *Repository* secret under Settings > Secrets and variables >"
+            echo "*Actions* (not the Variables tab, not Dependabot, not an Environment secret),"
+            echo "named exactly NPM_TOKEN."
+            exit 1
+          fi
+          echo "NPM_TOKEN present (${#NODE_AUTH_TOKEN} chars)."
+          if ! npm whoami --registry=https://registry.npmjs.org/; then
+            echo "::error::npm rejected the token: it is set but invalid, expired, or lacks"
+            echo "publish access to specflow-emulator. Regenerate a granular/automation token."
+            exit 1
+          fi
 
       - run: npm ci
 
