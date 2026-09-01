@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write # create the GitHub Release
-  id-token: write # npm provenance
+  id-token: write # npm OIDC trusted publishing + provenance
 
 jobs:
   publish:
@@ -17,28 +17,12 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: "https://registry.npmjs.org"
           cache: npm
 
-      - name: Verify npm auth
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
-            echo "::error::secrets.NPM_TOKEN is empty in this job."
-            echo "It must be a *Repository* secret under Settings > Secrets and variables >"
-            echo "*Actions* (not the Variables tab, not Dependabot, not an Environment secret),"
-            echo "named exactly NPM_TOKEN."
-            exit 1
-          fi
-          echo "NPM_TOKEN present (${#NODE_AUTH_TOKEN} chars)."
-          if ! npm whoami --registry=https://registry.npmjs.org/; then
-            echo "::error::npm rejected the token: it is set but invalid, expired, or lacks"
-            echo "publish access to specflow-emulator. Regenerate a granular/automation token."
-            exit 1
-          fi
+      # OIDC "trusted publisher" auth needs a newer npm than Node ships.
+      - run: npm install -g npm@latest
 
       - run: npm ci
 
@@ -63,9 +47,13 @@ jobs:
           echo "dist_tag=$DIST_TAG" >> "$GITHUB_OUTPUT"
           echo "Publishing $PKG_VERSION with dist-tag '$DIST_TAG'"
 
+      # No NODE_AUTH_TOKEN: authentication is via GitHub OIDC. This requires a
+      # "Trusted Publisher" to be configured on npmjs.com for this package:
+      #   package > Settings > Trusted Publisher > GitHub Actions
+      #     Organization or user: CroquetMickael
+      #     Repository:           specflow-emulator
+      #     Workflow filename:    release.yml
       - run: npm publish --provenance --access public --tag "${{ steps.meta.outputs.dist_tag }}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         env:
