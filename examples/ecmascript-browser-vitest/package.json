@@ -1,0 +1,18 @@
+{
+  "name": "specflow-emulator-example-browser",
+  "version": "1.0.0",
+  "description": "Execute Gherkin scenarios in Vitest browser mode",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "vitest": "vitest --verbose"
+  },
+  "devDependencies": {
+    "@vitest/browser": "^4.1.11",
+    "@vitest/browser-playwright": "^4.1.11",
+    "playwright": "^1.49.0",
+    "specflow-emulator": "../..",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
+  }
+}

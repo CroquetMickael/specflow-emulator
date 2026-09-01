@@ -1,24 +1,20 @@
-import { IJestLike, Options, defineFeature as getFeature } from "jest-cucumber";
+import { IJestLike } from "jest-cucumber";
 import callsites from "callsites";
 import { glob } from "glob";
 import path from "path";
 
-import {
-  ParsedScenario,
-  ParsedScenarioOutline,
-} from "jest-cucumber/dist/src/models";
-import { DefineScenarioFunction } from "jest-cucumber/dist/src/feature-definition-creation";
-import { StepBlock } from "./common.types";
-import { formatStepMatchingError } from "./errors";
-import { StepDefinition } from "./stepDefinition";
 import { loadFeature } from "jest-cucumber/dist/src/parsed-feature-loading";
-
-const stepNotExportedString = (filePath: string) =>
-  `Le fichier ${filePath} n'exporte pas de variable stepDefinitions`;
-
-const stepPool: StepDefinition[] = [];
-let isLoaded = false;
-let internalRunner: IJestLike = undefined;
+import { StepDefinition } from "./stepDefinition";
+import {
+  bindFeature,
+  buildConfig,
+  markStepsLoaded,
+  registerSteps,
+  resetStepPool,
+  setRunner,
+  stepNotExportedString,
+  stepsLoaded,
+} from "./engine";
 
 export const defineFeature = (
   cheminFichier: string,
@@ -31,85 +27,8 @@ export const defineFeature = (
     ? `${dossierAppelant}/${cheminFichier}`
     : cheminFichier;
 
-  const config: Options = {
-    loadRelativePath: false,
-    errors: {
-      allowScenariosNotInFeatureFile: false,
-      scenariosMustMatchFeatureFile: true,
-      stepsMustMatchFeatureFile: true,
-    },
-  };
-
-  if (internalRunner && Object.keys(internalRunner).length > 0) {
-    config.runner = internalRunner;
-  }
-
-  const feature = loadFeature(cheminAbsolu, config);
-
-  const getNewBlock = (
-    stepKeyword: string,
-    currentBlock: StepBlock
-  ): StepBlock =>
-    ["given", "when", "then"].includes(stepKeyword)
-      ? (stepKeyword as StepBlock)
-      : currentBlock;
-
-  getFeature(feature, (defineScenarioJest) => {
-    const defineScenarios = (
-      scenarios: ParsedScenario[] | ParsedScenarioOutline[]
-    ) => {
-      scenarios.forEach((scenario) => {
-        const tags = feature.tags.concat(scenario.tags);
-        const availableSteps = stepPool.filter((step) =>
-          step.hasMatchingScopes(feature.title, scenario.title, tags)
-        );
-        const scenarioContext = {};
-
-        let defineScenario: DefineScenarioFunction = defineScenarioJest;
-        if (scenario.tags.includes("@only")) {
-          defineScenario = defineScenarioJest.only;
-        }
-        if (
-          scenario.tags.includes("@ignore") ||
-          scenario.tags.includes("@skip")
-        ) {
-          defineScenario = defineScenarioJest.skip;
-        }
-
-        let currentBlock: StepBlock = "given";
-        defineScenario(scenario.title, (stepsDefinitionCallBack) => {
-          scenario.steps.forEach((step) => {
-            currentBlock = getNewBlock(step.keyword, currentBlock);
-            const stepDefinitions = availableSteps.filter((stepDefinition) => {
-              if (stepDefinition.block !== currentBlock) {
-                return false;
-              }
-              const matchResult = step.stepText.match(stepDefinition.match);
-              return matchResult && matchResult[0] === step.stepText;
-            });
-
-            if (stepDefinitions.length !== 1) {
-              const matchingError = formatStepMatchingError(
-                cheminAbsolu,
-                feature,
-                scenario,
-                step,
-                stepDefinitions
-              );
-              throw new Error(matchingError);
-            }
-
-            const { selectJestCallback, match, callback } = stepDefinitions[0];
-            const defineStepJest = selectJestCallback(stepsDefinitionCallBack);
-            defineStepJest(match, callback(scenarioContext));
-          });
-        });
-      });
-    };
-
-    defineScenarios(feature.scenarios);
-    defineScenarios(feature.scenarioOutlines);
-  });
+  const feature = loadFeature(cheminAbsolu, buildConfig());
+  bindFeature(feature, cheminAbsolu);
 };
 
 export const loadSteps = async ({
@@ -119,11 +38,11 @@ export const loadSteps = async ({
   runner?: IJestLike;
   dossier?: string;
 }) => {
-  if (isLoaded) {
+  if (stepsLoaded()) {
     return;
   }
 
-  stepPool.length = 0;
+  resetStepPool();
   const patternFichier = `${dossier}/**/*.stepdefinitions.{js,jsx,ts,tsx}`;
   const fichiers = glob.sync(patternFichier);
 
@@ -137,14 +56,9 @@ export const loadSteps = async ({
       console.error(stepNotExportedString(cheminFichier));
       return;
     }
-    stepDefinitions.forEach((stepDefinition) => {
-      stepDefinition.cheminFichier = cheminFichier;
-      stepPool.push(stepDefinition);
-    });
-  }
-  if (runner && Object.keys(runner).length > 0) {
-    internalRunner = runner;
+    registerSteps(stepDefinitions, cheminFichier);
   }
 
-  isLoaded = true;
+  setRunner(runner);
+  markStepsLoaded();
 };

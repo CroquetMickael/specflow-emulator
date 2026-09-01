@@ -1,4 +1,4 @@
-import { defineSteps } from "specflow-emulator";
+import { defineSteps } from "specflow-emulator/browser";
 
 export const stepDefinitions = defineSteps(
   [{ feature: "Simple Calculator", tag: "feature" }],
